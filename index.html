@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스카티(Scotii)의 은퇴 탐험 버킷리스트 & 주간 타임테이블</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            900: '#0F172A',
+                            800: '#1E293B',
+                            700: '#334155',
+                        },
+                        cream: '#F8FAFC',
+                        coral: {
+                            500: '#FF6B6B',
+                            600: '#EE5253',
+                            400: '#FF8E8E',
+                        },
+                        teal: {
+                            400: '#2DD4BF',
+                            500: '#14B8A6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-navy-900 text-slate-100 min-h-screen pb-16 transition-colors duration-300" id="app-body">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-navy-900/80 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-coral-500 to-amber-500 flex items-center justify-center text-white font-bold shadow-lg shadow-coral-500/20">
+                    ✨
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-slate-100 via-slate-200 to-coral-400 bg-clip-text text-transparent">
+                        Scotii's Explorer Dashboard
+                    </h1>
+                    <p class="text-xs text-slate-400">버킷리스트 & 주간 데일리 타임테이블</p>
+                </div>
+            </div>
+
+            <!-- Page View Navigation Tabs -->
+            <div class="hidden md:flex items-center gap-1 bg-slate-800/80 p-1.5 rounded-2xl border border-slate-700/60">
+                <button id="tab-btn-bucket" onclick="switchPage('bucket')" class="flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all bg-coral-500 text-white shadow-md shadow-coral-500/20">
+                    <i data-lucide="compass" class="w-4 h-4"></i>
+                    <span>🗺️ 버킷리스트</span>
+                </button>
+                <button id="tab-btn-schedule" onclick="switchPage('schedule')" class="flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                    <span>📅 데일리 타임테이블 (월~일)</span>
+                </button>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button id="add-task-btn" onclick="openModal()" class="flex items-center gap-2 bg-coral-500 hover:bg-coral-600 text-white font-medium px-4 py-2 rounded-xl text-sm transition-all shadow-lg shadow-coral-500/25 active:scale-95">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">새 항목 추가</span>
+                </button>
+                <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" title="테마 전환">
+                    <i data-lucide="sun" id="theme-icon-sun" class="w-4 h-4 hidden"></i>
+                    <i data-lucide="moon" id="theme-icon-moon" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile View Navigation Tabs -->
+        <div class="md:hidden flex border-t border-slate-800 bg-slate-900/90 px-4 py-2 gap-2">
+            <button id="tab-btn-bucket-mobile" onclick="switchPage('bucket')" class="flex-1 py-2 text-xs font-bold text-center rounded-xl bg-coral-500 text-white">
+                🗺️ 버킷리스트
+            </button>
+            <button id="tab-btn-schedule-mobile" onclick="switchPage('schedule')" class="flex-1 py-2 text-xs font-medium text-center rounded-xl bg-slate-800 text-slate-300">
+                📅 타임테이블 (월~일)
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+
+        <!-- PAGE 1: BUCKET LIST VIEW -->
+        <div id="page-bucket" class="space-y-8">
+            <!-- Banner & Progress Overview -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Welcome Card -->
+                <div class="lg:col-span-2 glass-card rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-coral-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coral-500/10 border border-coral-500/20 text-coral-400 text-xs font-semibold mb-3">
+                            <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+                            <span>자유로운 탐험가의 삶</span>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">상사 없는 삶, 오직 나만의 로드맵</h2>
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-xl">
+                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, 몰입형 AI 연구, 저렴한 아침 라운딩과 재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex flex-wrap items-center gap-6 text-xs text-slate-400">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-coral-400"></i>
+                            <span>1순위 목표: 충남 읍/면 소형독채</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="coins" class="w-4 h-4 text-amber-400"></i>
+                            <span>예산: 1.5억 이내 (다주택 비과세)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Card -->
+                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-sm font-semibold text-slate-400 mb-1">버킷리스트 달성률</h3>
+                        <div class="flex items-baseline gap-3 mb-4">
+                            <span class="text-4xl font-extrabold text-white" id="progress-percent">0%</span>
+                            <span class="text-sm text-slate-400" id="progress-count">(0 / 0 완료)</span>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-800 rounded-full h-3 mb-6 overflow-hidden p-0.5 border border-slate-700/50">
+                            <div id="progress-bar" class="bg-gradient-to-r from-coral-500 to-teal-400 h-full rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800">
+                        <div class="bg-slate-800/50 rounded-xl p-3 text-center border border-slate-700/30">
+                            <span class="text-xs text-slate-400 block mb-1">진행 중</span>
+                            <span class="text-lg font-bold text-amber-400" id="pending-count">0</span>
+                        </div>
+                        <div class="bg-slate-800/50 rounded-xl p-3 text-center border border-slate-700/30">
+                            <span class="text-xs text-slate-400 block mb-1">달성 완료</span>
+                            <span class="text-lg font-bold text-teal-400" id="completed-count">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter & Search Controls -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-2 sm:pb-0 no-scrollbar" id="category-filters">
+                    <button onclick="filterCategory('ALL')" class="cat-btn active px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap bg-coral-500 text-white shadow-md shadow-coral-500/20 transition-all">
+                        전체 보기
+                    </button>
+                    <button onclick="filterCategory('HOUSING')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+                        🏡 주거 & 정착
+                    </button>
+                    <button onclick="filterCategory('SPORTS')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+                        ⛳ 건강 & 여가
+                    </button>
+                    <button onclick="filterCategory('AI_LEARNING')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+                        🧠 배움 & AI
+                    </button>
+                    <button onclick="filterCategory('COMMUNITY')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+                        🤝 봉사 & 재능기부
+                    </button>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="flex items-center gap-2 self-end sm:self-auto">
+                    <select id="status-select" onchange="renderItems()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-coral-500">
+                        <option value="ALL">전체 상태</option>
+                        <option value="PENDING">진행 대기</option>
+                        <option value="COMPLETED">달성 완료</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Bucket List Items Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="bucket-list-container">
+                <!-- Items rendered via JS -->
+            </div>
+
+            <!-- Reference Links -->
+            <div class="glass-card rounded-2xl p-6 border border-slate-800">
+                <h3 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
+                    <i data-lucide="bookmark" class="w-5 h-5 text-coral-400"></i>
+                    <span>탐험 가이드 & 유용한 링크</span>
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                    <a href="https://www.greendaero.go.kr" target="_blank" class="p-4 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition-all flex items-start gap-3 group">
+                        <div class="p-2.5 rounded-lg bg-teal-500/10 text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200 group-hover:text-coral-400 transition-colors">그린대로 (귀농귀촌 플랫폼)</div>
+                            <div class="text-slate-400 mt-0.5">충남 농촌에서 살아보기 지원 프로그램 신청</div>
+                        </div>
+                    </a>
+
+                    <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-start gap-3">
+                        <div class="p-2.5 rounded-lg bg-amber-500/10 text-amber-400">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200">다주택 세제 혜택 가이드</div>
+                            <div class="text-slate-400 mt-0.5">조세특례제한법 99조의4 (읍/면 공시가 3억 이하)</div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-start gap-3">
+                        <div class="p-2.5 rounded-lg bg-coral-500/10 text-coral-400">
+                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200">로컬 AI & 스마트홈 연구</div>
+                            <div class="text-slate-400 mt-0.5">Home Assistant + 로컬 LLM 통합 아지트 세팅</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: WEEKLY TIMETABLE VIEW (월~일) -->
+        <div id="page-schedule" class="space-y-8 hidden">
+            <!-- Timetable Banner -->
+            <div class="glass-card rounded-2xl p-6 border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-semibold mb-2">
+                        <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                        <span>스카티의 주간 데일리 타임테이블 (월 ~ 일)</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-1">버킷리스트 기반 일상 계획표</h2>
+                    <p class="text-slate-400 text-sm">
+                        꿈꾸던 버킷리스트를 월요일부터 일요일까지 시간대별 타임 스케줄로 현실화하세요.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="openScheduleModal()" class="flex items-center gap-2 bg-teal-500 hover:bg-teal-600 text-white font-medium px-4 py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-teal-500/20 active:scale-95">
+                        <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                        <span>일정 직접 추가</span>
+                    </button>
+                    <button onclick="resetDefaultSchedule()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors" title="기본 타임테이블 복원">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Time Slots Grid (Monday to Sunday) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-4" id="timetable-days-container">
+                <!-- Days (MON to SUN) rendered via JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal for Adding/Editing Bucket List Item -->
+    <div id="item-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-card bg-navy-800 rounded-2xl max-w-md w-full p-6 border border-slate-700 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2" id="modal-title">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-coral-400"></i>
+                    <span>새 버킷리스트 항목</span>
+                </h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="item-form" onsubmit="saveItem(event)" class="space-y-4">
+                <input type="hidden" id="item-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">카테고리</label>
+                    <select id="item-category" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500">
+                        <option value="HOUSING">🏡 주거 & 정착</option>
+                        <option value="SPORTS">⛳ 건강 & 여가</option>
+                        <option value="AI_LEARNING">🧠 배움 & AI</option>
+                        <option value="COMMUNITY">🤝 봉사 & 재능기부</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">버킷리스트 제목</label>
+                    <input type="text" id="item-title" required placeholder="예: 충남 살아보기 프로그램 1차 참가" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500 placeholder-slate-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">세부 설명 (선택)</label>
+                    <textarea id="item-desc" rows="3" placeholder="상세 목표나 실행 방안을 적어보세요." class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500 placeholder-slate-500"></textarea>
+                </div>
+
+                <div class="pt-3 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2.5 rounded-xl text-xs font-medium bg-slate-700 hover:bg-slate-600 text-slate-300 transition-colors">
+                        취소
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-semibold bg-coral-500 hover:bg-coral-600 text-white shadow-lg shadow-coral-500/20 transition-all">
+                        저장하기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Schedule Block -->
+    <div id="schedule-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-card bg-navy-800 rounded-2xl max-w-md w-full p-6 border border-slate-700 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i data-lucide="calendar-plus" class="w-5 h-5 text-teal-400"></i>
+                    <span>주간 일정 추가</span>
+                </h3>
+                <button onclick="closeScheduleModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="schedule-form" onsubmit="saveScheduleBlock(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">요일 선택</label>
+                    <select id="sched-day" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500">
+                        <option value="MON">월요일</option>
+                        <option value="TUE">화요일</option>
+                        <option value="WED">수요일</option>
+                        <option value="THU">목요일</option>
+                        <option value="FRI">금요일</option>
+                        <option value="SAT">토요일</option>
+                        <option value="SUN">일요일</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">버킷리스트 연결 선택</label>
+                    <select id="sched-bucket-id" onchange="autoFillScheduleTitle()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500">
+                        <option value="">-- 직접 입력 또는 버킷리스트 선택 --</option>
+                        <!-- Bucket list items inserted dynamically -->
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">일정 타이틀</label>
+                    <input type="text" id="sched-title" required placeholder="예: 얼리버드 라운딩 및 야외 운동" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">시간대 / 시각</label>
+                        <input type="text" id="sched-time" required placeholder="06:00 ~ 08:30" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">장소/메모</label>
+                        <input type="text" id="sched-location" placeholder="지역 골프장 / 서재" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
+                    </div>
+                </div>
+
+                <div class="pt-3 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeScheduleModal()" class="px-4 py-2.5 rounded-xl text-xs font-medium bg-slate-700 hover:bg-slate-600 text-slate-300 transition-colors">
+                        취소
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-semibold bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 transition-all">
+                        일정 등록
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initial Default Bucket Items
+        const DEFAULT_ITEMS = [
+            {
+                id: '1',
+                category: 'HOUSING',
+                title: "지자체 '살아보기' 프로그램 1년 탐험",
+                desc: '충남/전북 지원 스테이 프로그램을 활용해 몇 주~몇 달씩 실거주하며 가장 맘에 드는 지역 탐색',
+                completed: false,
+                date: '2026-07-26'
+            },
+            {
+                id: '2',
+                category: 'HOUSING',
+                title: '운명의 소형 독채 매입',
+                desc: '탐험 후 마음이 끌린 충남 읍/면 지역에 예산 1.5억 이내, 20평 이내 소형 주택 매입 (다주택 비과세)',
+                completed: false,
+                date: '2026-07-26'
+            },
+            {
+                id: '3',
+                category: 'HOUSING',
+                title: '나만의 아지트 & 서재 세팅',
+                desc: '잡초 걱정 없는 데크/자갈 마당, 자연 조망 테라스, 편안한 독서/작업 공간 완성',
+                completed: false,
+                date: '2026-07-26'
+            },
+            {
+                id: '4',
+                category: 'SPORTS',
+                title: '지역 골프장 얼리버드 라운드',
+                desc: '아침 일찍 지역의 저렴한 골프장에서 쾌적한 아침 공기를 마시며 여유로운 라운딩',
+                completed: false,
+                date: '2026-07-26'
+            },
+            {
+                id: '5',
+                category: 'SPORTS',
+                title: '자연 속 매일 운동 & 독서',
+                desc: '맑은 공기와 풍경 속에서 매일 꾸준한 운동과 독서로 몸과 마음 리셋',
+                completed: false,
+                date: '2026-07-26'
+            },
+            {
+                id: '6',
+                category: 'AI_LEARNING',
+                title: '몰입형 AI 기술 공부 & 연구',
+                desc: '조직의 목적이 아닌 오직 나만의 재미와 호기심을 위한 최신 AI 알고리즘/프로젝트 연구',
+                completed: false,
+                date: '2026-07-26'
+            },
+            {
+                id: '7',
+                category: 'AI_LEARNING',
+                title: '자유로운 독서 삼매경',
+                desc: '시간 제약 없이 읽고 싶었던 다양한 분야의 서적들을 깊이 있게 완독',
+                completed: false,
+                date: '2026-07-26'
+            },
+            {
+                id: '8',
+                category: 'COMMUNITY',
+                title: '지역사회 재능기부 & 봉사활동',
+                desc: '스카티님의 높은 기술적 역량과 지식을 활용해 지역 주민과 함께하는 의미 있는 사회적 기여',
+                completed: false,
+                date: '2026-07-26'
+            }
+        ];
+
+        // Default Weekly Timetable (월 ~ 일)
+        const DEFAULT_SCHEDULE = {
+            'MON': [
+                { id: 's1', time: '06:30 ~ 08:30', title: '자연 속 매일 운동 & 산책', bucketId: '5', location: '지자체 마을 산책로', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's2', time: '09:30 ~ 12:00', title: '몰입형 AI 기술 공부 & 연구', bucketId: '6', location: '아지트 서재', color: 'border-indigo-500/40 bg-indigo-500/10' },
+                { id: 's3', time: '14:00 ~ 17:00', title: "지자체 '살아보기' 마을 탐색", bucketId: '1', location: '충남 지자체 현장', color: 'border-amber-500/40 bg-amber-500/10' }
+            ],
+            'TUE': [
+                { id: 's4', time: '06:00 ~ 09:30', title: '지역 골프장 얼리버드 라운드', bucketId: '4', location: '지역 골프장', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's5', time: '13:30 ~ 16:30', title: '자유로운 독서 삼매경', bucketId: '7', location: '테라스 / 서재', color: 'border-indigo-500/40 bg-indigo-500/10' }
+            ],
+            'WED': [
+                { id: 's6', time: '07:00 ~ 08:30', title: '자연 속 매일 운동 & 스트레칭', bucketId: '5', location: '마당 테라스', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's7', time: '10:00 ~ 12:00', title: '지역사회 재능기부 & 봉사', bucketId: '8', location: '지역 문화/복지 센터', color: 'border-coral-500/40 bg-coral-500/10' },
+                { id: 's8', time: '14:00 ~ 17:00', title: '몰입형 AI 기술 공부 & 코드 아트', bucketId: '6', location: '아지트 스튜디오', color: 'border-indigo-500/40 bg-indigo-500/10' }
+            ],
+            'THU': [
+                { id: 's9', time: '06:00 ~ 09:30', title: '지역 골프장 얼리버드 라운드', bucketId: '4', location: '지역 골프장', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's10', time: '14:00 ~ 17:00', title: "지자체 '살아보기' 소형 주택 탐방", bucketId: '2', location: '충남 읍/면 마을', color: 'border-amber-500/40 bg-amber-500/10' }
+            ],
+            'FRI': [
+                { id: 's11', time: '07:00 ~ 08:30', title: '자연 속 매일 운동 & 산책', bucketId: '5', location: '마을 호수 산책로', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's12', time: '09:30 ~ 12:00', title: '몰입형 AI 기술 공부 & 연구', bucketId: '6', location: '아지트 서재', color: 'border-indigo-500/40 bg-indigo-500/10' },
+                { id: 's13', time: '14:00 ~ 16:30', title: '지역사회 재능기부 준비/멘토링', bucketId: '8', location: '지역 센터', color: 'border-coral-500/40 bg-coral-500/10' }
+            ],
+            'SAT': [
+                { id: 's14', time: '08:00 ~ 11:00', title: '자연 속 매일 운동 & 드라이브', bucketId: '5', location: '충남 경관 드라이브 코스', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's15', time: '14:00 ~ 18:00', title: '나만의 아지트 & 마당 커스텀', bucketId: '3', location: '아지트 마당/데크', color: 'border-amber-500/40 bg-amber-500/10' }
+            ],
+            'SUN': [
+                { id: 's16', time: '09:00 ~ 12:00', title: '자유로운 독서 삼매경', bucketId: '7', location: '햇살 드는 거실', color: 'border-indigo-500/40 bg-indigo-500/10' },
+                { id: 's17', time: '15:00 ~ 17:00', title: '주간 회고 & 차주 버킷리스트 수립', bucketId: '', location: '아지트 서재', color: 'border-teal-500/40 bg-teal-500/10' }
+            ]
+        };
+
+        const DAYS_META = [
+            { key: 'MON', label: '월요일', badge: 'bg-indigo-500/20 text-indigo-300' },
+            { key: 'TUE', label: '화요일', badge: 'bg-teal-500/20 text-teal-300' },
+            { key: 'WED', label: '수요일', badge: 'bg-coral-500/20 text-coral-300' },
+            { key: 'THU', label: '목요일', badge: 'bg-amber-500/20 text-amber-300' },
+            { key: 'FRI', label: '금요일', badge: 'bg-purple-500/20 text-purple-300' },
+            { key: 'SAT', label: '토요일', badge: 'bg-blue-500/20 text-blue-300' },
+            { key: 'SUN', label: '일요일', badge: 'bg-rose-500/20 text-rose-300' }
+        ];
+
+        let bucketItems = [];
+        let scheduleData = {};
+        let currentCategory = 'ALL';
+
+        const CAT_CONFIG = {
+            'HOUSING': { name: '주거 & 정착', icon: 'home', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
+            'SPORTS': { name: '건강 & 여가', icon: 'flag', color: 'text-teal-400', bg: 'bg-teal-500/10', border: 'border-teal-500/20' },
+            'AI_LEARNING': { name: '배움 & AI', icon: 'brain', color: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20' },
+            'COMMUNITY': { name: '봉사 & 재능기부', icon: 'heart', color: 'text-coral-400', bg: 'bg-coral-500/10', border: 'border-coral-500/20' }
+        };
+
+        // Page Switcher
+        function switchPage(page) {
+            const pageBucket = document.getElementById('page-bucket');
+            const pageSchedule = document.getElementById('page-schedule');
+
+            const btnBucket = document.getElementById('tab-btn-bucket');
+            const btnSched = document.getElementById('tab-btn-schedule');
+
+            const btnBucketMob = document.getElementById('tab-btn-bucket-mobile');
+            const btnSchedMob = document.getElementById('tab-btn-schedule-mobile');
+
+            if (page === 'bucket') {
+                pageBucket.classList.remove('hidden');
+                pageSchedule.classList.add('hidden');
+
+                btnBucket.className = 'flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all bg-coral-500 text-white shadow-md shadow-coral-500/20';
+                btnSched.className = 'flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all';
+
+                btnBucketMob.className = 'flex-1 py-2 text-xs font-bold text-center rounded-xl bg-coral-500 text-white';
+                btnSchedMob.className = 'flex-1 py-2 text-xs font-medium text-center rounded-xl bg-slate-800 text-slate-300';
+            } else {
+                pageBucket.classList.add('hidden');
+                pageSchedule.classList.remove('hidden');
+
+                btnSched.className = 'flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all bg-teal-500 text-white shadow-md shadow-teal-500/20';
+                btnBucket.className = 'flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all';
+
+                btnSchedMob.className = 'flex-1 py-2 text-xs font-bold text-center rounded-xl bg-teal-500 text-white';
+                btnBucketMob.className = 'flex-1 py-2 text-xs font-medium text-center rounded-xl bg-slate-800 text-slate-300';
+
+                renderTimetable();
+            }
+        }
+
+        // Initialize App
+        function initApp() {
+            const savedItems = localStorage.getItem('scotii_bucket_list');
+            if (savedItems) {
+                try { bucketItems = JSON.parse(savedItems); } catch(e) { bucketItems = DEFAULT_ITEMS; }
+            } else {
+                bucketItems = DEFAULT_ITEMS;
+                saveToStorage();
+            }
+
+            const savedSched = localStorage.getItem('scotii_weekly_schedule');
+            if (savedSched) {
+                try { scheduleData = JSON.parse(savedSched); } catch(e) { scheduleData = DEFAULT_SCHEDULE; }
+            } else {
+                scheduleData = DEFAULT_SCHEDULE;
+                saveScheduleToStorage();
+            }
+
+            renderItems();
+            renderTimetable();
+            lucide.createIcons();
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('scotii_bucket_list', JSON.stringify(bucketItems));
+        }
+
+        function saveScheduleToStorage() {
+            localStorage.setItem('scotii_weekly_schedule', JSON.stringify(scheduleData));
+        }
+
+        // Render Bucket List
+        function renderItems() {
+            const container = document.getElementById('bucket-list-container');
+            const statusFilter = document.getElementById('status-select').value;
+
+            let filtered = bucketItems.filter(item => {
+                const matchCat = currentCategory === 'ALL' || item.category === currentCategory;
+                const matchStatus = statusFilter === 'ALL' || 
+                                    (statusFilter === 'COMPLETED' && item.completed) ||
+                                    (statusFilter === 'PENDING' && !item.completed);
+                return matchCat && matchStatus;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full glass-card rounded-2xl p-12 text-center text-slate-400">
+                        <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
+                        <p class="text-sm">해당 조건에 부합하는 버킷리스트 항목이 없습니다.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = filtered.map(item => {
+                    const cat = CAT_CONFIG[item.category] || CAT_CONFIG['HOUSING'];
+                    return `
+                        <div class="glass-card rounded-2xl p-5 border ${item.completed ? 'border-teal-500/30 bg-slate-800/30' : 'border-slate-800'} transition-all hover:border-slate-700 flex flex-col justify-between group">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${cat.bg} ${cat.color} border ${cat.border}">
+                                        <i data-lucide="${cat.icon}" class="w-3.5 h-3.5"></i>
+                                        <span>${cat.name}</span>
+                                    </span>
+                                    <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                                        <button onclick="editItem('${item.id}')" class="p-1.5 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-800">
+                                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                        <button onclick="deleteItem('${item.id}')" class="p-1.5 text-slate-400 hover:text-coral-400 rounded-lg hover:bg-slate-800">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3 my-2">
+                                    <button onclick="toggleItem('${item.id}')" class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-md border ${item.completed ? 'bg-teal-500 border-teal-500 text-white' : 'border-slate-600 hover:border-coral-400'} flex items-center justify-center transition-colors">
+                                        ${item.completed ? '<i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>' : ''}
+                                    </button>
+                                    <div>
+                                        <h4 class="text-sm font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-100'} mb-1">
+                                            ${escapeHtml(item.title)}
+                                        </h4>
+                                        ${item.desc ? `<p class="text-xs ${item.completed ? 'text-slate-600' : 'text-slate-400'} leading-relaxed">${escapeHtml(item.desc)}</p>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500">
+                                <span>등록: ${item.date || '2026-07-26'}</span>
+                                <span class="${item.completed ? 'text-teal-400 font-semibold' : 'text-amber-400/80'}">
+                                    ${item.completed ? '✓ 달성 완료' : '⏳ 진행 예정'}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            updateStats();
+            lucide.createIcons();
+        }
+
+        // Render Timetable (Mon ~ Sun)
+        function renderTimetable() {
+            const container = document.getElementById('timetable-days-container');
+            
+            container.innerHTML = DAYS_META.map(day => {
+                const blocks = scheduleData[day.key] || [];
+                return `
+                    <div class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-800">
+                                <span class="text-sm font-bold text-white flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded-lg text-xs font-semibold ${day.badge}">${day.label}</span>
+                                </span>
+                                <button onclick="openScheduleModal('${day.key}')" class="p-1 text-slate-400 hover:text-teal-400 rounded-lg hover:bg-slate-800" title="일정 추가">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                            <div class="space-y-3">
+                                ${blocks.length === 0 ? `
+                                    <div class="text-center py-6 text-slate-500 text-xs">
+                                        일정이 없습니다
+                                    </div>
+                                ` : blocks.map(b => {
+                                    const linkedBucket = bucketItems.find(i => i.id === b.bucketId);
+                                    return `
+                                        <div class="p-3 rounded-xl border ${b.color || 'border-teal-500/30 bg-teal-500/10'} relative group">
+                                            <button onclick="deleteScheduleBlock('${day.key}', '${b.id}')" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-coral-400 transition-opacity">
+                                                <i data-lucide="x" class="w-3 h-3"></i>
+                                            </button>
+
+                                            <div class="text-[10px] font-semibold text-teal-400 mb-1 flex items-center gap-1">
+                                                <i data-lucide="clock" class="w-3 h-3"></i>
+                                                <span>${escapeHtml(b.time)}</span>
+                                            </div>
+
+                                            <div class="text-xs font-bold text-slate-100 mb-1 leading-snug">
+                                                ${escapeHtml(b.title)}
+                                            </div>
+
+                                            ${b.location ? `
+                                                <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
+                                                    <i data-lucide="map-pin" class="w-2.5 h-2.5 text-slate-500"></i>
+                                                    <span>${escapeHtml(b.location)}</span>
+                                                </div>
+                                            ` : ''}
+
+                                            ${linkedBucket ? `
+                                                <div class="mt-2 pt-1.5 border-t border-slate-700/40 flex items-center gap-1 text-[9px] text-amber-300 font-medium">
+                                                    <i data-lucide="link" class="w-2.5 h-2.5"></i>
+                                                    <span class="truncate">${escapeHtml(linkedBucket.title)}</span>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-800 text-center">
+                            <button onclick="openScheduleModal('${day.key}')" class="w-full py-1.5 text-[11px] text-slate-400 hover:text-teal-400 transition-colors flex items-center justify-center gap-1">
+                                <i data-lucide="plus-circle" class="w-3 h-3"></i>
+                                <span>일정 추가하기</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // Stats Calculator
+        function updateStats() {
+            const total = bucketItems.length;
+            const completed = bucketItems.filter(i => i.completed).length;
+            const pending = total - completed;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            document.getElementById('progress-percent').innerText = `${percent}%`;
+            document.getElementById('progress-count').innerText = `(${completed} / ${total} 완료)`;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
+            document.getElementById('pending-count').innerText = pending;
+            document.getElementById('completed-count').innerText = completed;
+        }
+
+        // Toggle Item Complete
+        function toggleItem(id) {
+            const item = bucketItems.find(i => i.id === id);
+            if (item) {
+                item.completed = !item.completed;
+                saveToStorage();
+                renderItems();
+            }
+        }
+
+        // Delete Item
+        function deleteItem(id) {
+            if (confirm('이 버킷리스트 항목을 삭제하시겠습니까?')) {
+                bucketItems = bucketItems.filter(i => i.id !== id);
+                saveToStorage();
+                renderItems();
+            }
+        }
+
+        // Filter Category
+        function filterCategory(cat) {
+            currentCategory = cat;
+            const buttons = document.querySelectorAll('#category-filters button');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-coral-500', 'text-white', 'shadow-md', 'shadow-coral-500/20');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+
+            event.target.closest('button').classList.remove('bg-slate-800', 'text-slate-300');
+            event.target.closest('button').classList.add('bg-coral-500', 'text-white', 'shadow-md', 'shadow-coral-500/20');
+
+            renderItems();
+        }
+
+        // Modal Handlers (Bucket Item)
+        function openModal() {
+            document.getElementById('item-id').value = '';
+            document.getElementById('modal-title').innerText = '새 버킷리스트 항목';
+            document.getElementById('item-form').reset();
+            document.getElementById('item-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('item-modal').classList.add('hidden');
+        }
+
+        function editItem(id) {
+            const item = bucketItems.find(i => i.id === id);
+            if (item) {
+                document.getElementById('item-id').value = item.id;
+                document.getElementById('item-category').value = item.category;
+                document.getElementById('item-title').value = item.title;
+                document.getElementById('item-desc').value = item.desc || '';
+                document.getElementById('modal-title').innerText = '버킷리스트 수정';
+                document.getElementById('item-modal').classList.remove('hidden');
+            }
+        }
+
+        function saveItem(e) {
+            e.preventDefault();
+            const id = document.getElementById('item-id').value;
+            const category = document.getElementById('item-category').value;
+            const title = document.getElementById('item-title').value;
+            const desc = document.getElementById('item-desc').value;
+
+            if (id) {
+                const item = bucketItems.find(i => i.id === id);
+                if (item) {
+                    item.category = category;
+                    item.title = title;
+                    item.desc = desc;
+                }
+            } else {
+                const newItem = {
+                    id: Date.now().toString(),
+                    category: category,
+                    title: title,
+                    desc: desc,
+                    completed: false,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                bucketItems.unshift(newItem);
+            }
+
+            saveToStorage();
+            closeModal();
+            renderItems();
+        }
+
+        // Modal Handlers (Schedule Block)
+        function openScheduleModal(dayKey = 'MON') {
+            document.getElementById('sched-day').value = dayKey;
+            document.getElementById('schedule-form').reset();
+            document.getElementById('sched-day').value = dayKey;
+
+            // Populate bucket list options
+            const bucketSelect = document.getElementById('sched-bucket-id');
+            bucketSelect.innerHTML = `
+                <option value="">-- 직접 입력 또는 버킷리스트 선택 --</option>
+                ${bucketItems.map(i => `<option value="${i.id}">${escapeHtml(i.title)}</option>`).join('')}
+            `;
+
+            document.getElementById('schedule-modal').classList.remove('hidden');
+        }
+
+        function closeScheduleModal() {
+            document.getElementById('schedule-modal').classList.add('hidden');
+        }
+
+        function autoFillScheduleTitle() {
+            const bucketId = document.getElementById('sched-bucket-id').value;
+            if (bucketId) {
+                const item = bucketItems.find(i => i.id === bucketId);
+                if (item) {
+                    document.getElementById('sched-title').value = item.title;
+                }
+            }
+        }
+
+        function saveScheduleBlock(e) {
+            e.preventDefault();
+            const day = document.getElementById('sched-day').value;
+            const bucketId = document.getElementById('sched-bucket-id').value;
+            const title = document.getElementById('sched-title').value;
+            const time = document.getElementById('sched-time').value;
+            const location = document.getElementById('sched-location').value;
+
+            if (!scheduleData[day]) {
+                scheduleData[day] = [];
+            }
+
+            const colors = [
+                'border-teal-500/40 bg-teal-500/10',
+                'border-indigo-500/40 bg-indigo-500/10',
+                'border-amber-500/40 bg-amber-500/10',
+                'border-coral-500/40 bg-coral-500/10'
+            ];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+            scheduleData[day].push({
+                id: 's_' + Date.now(),
+                time: time,
+                title: title,
+                bucketId: bucketId,
+                location: location,
+                color: randomColor
+            });
+
+            saveScheduleToStorage();
+            closeScheduleModal();
+            renderTimetable();
+        }
+
+        function deleteScheduleBlock(day, blockId) {
+            if (scheduleData[day]) {
+                scheduleData[day] = scheduleData[day].filter(b => b.id !== blockId);
+                saveScheduleToStorage();
+                renderTimetable();
+            }
+        }
+
+        function resetDefaultSchedule() {
+            if (confirm('주간 데일리 타임테이블을 기본 설정으로 복원하시겠습니까?')) {
+                scheduleData = DEFAULT_SCHEDULE;
+                saveScheduleToStorage();
+                renderTimetable();
+            }
+        }
+
+        // Theme Toggle (Dark/Light)
+        let isDark = true;
+        function toggleTheme() {
+            isDark = !isDark;
+            const body = document.getElementById('app-body');
+            const sunIcon = document.getElementById('theme-icon-sun');
+            const moonIcon = document.getElementById('theme-icon-moon');
+
+            if (isDark) {
+                body.classList.remove('bg-slate-100', 'text-slate-900');
+                body.classList.add('bg-navy-900', 'text-slate-100');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                body.classList.remove('bg-navy-900', 'text-slate-100');
+                body.classList.add('bg-slate-100', 'text-slate-900');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            }
+        }
+
+        function escapeHtml(str) {
+            return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;") : '';
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
