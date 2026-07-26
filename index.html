@@ -51,6 +51,11 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        /* Custom Time Input Styling */
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.8);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-navy-900 text-slate-100 min-h-screen pb-16 transition-colors duration-300" id="app-body">
@@ -252,7 +257,7 @@
                     </div>
                     <h2 class="text-2xl font-bold text-white mb-1">버킷리스트 기반 일상 계획표</h2>
                     <p class="text-slate-400 text-sm">
-                        각 일정을 <span class="text-teal-400 font-semibold">클릭</span>하면 시간과 세부 내용을 언제든 손쉽게 수정할 수 있습니다.
+                        모든 일정은 <span class="text-teal-400 font-semibold">이른 시각부터 위에서 아래로 자동 정렬</span>되며, 클릭하여 시작·종료 시각을 손쉽게 피커로 선택할 수 있습니다.
                     </p>
                 </div>
 
@@ -323,7 +328,7 @@
         </div>
     </div>
 
-    <!-- Modal for Adding/Editing Schedule Block -->
+    <!-- Modal for Adding/Editing Schedule Block (Improved UX with Time Picker) -->
     <div id="schedule-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="glass-card bg-navy-800 rounded-2xl max-w-md w-full p-6 border border-slate-700 shadow-2xl relative">
             <div class="flex items-center justify-between mb-5">
@@ -365,15 +370,43 @@
                     <input type="text" id="sched-title" required placeholder="예: AI 스마트 팜 센서/관수 제어 연구" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">시간대 / 시각</label>
-                        <input type="text" id="sched-time" required placeholder="예: 13:00 ~ 15:30" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
+                <!-- Easy Time Picker Controls -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">시작 & 종료 시간 선택</label>
+                    <div class="grid grid-cols-2 gap-3 mb-2">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">시작 시각</span>
+                            <input type="time" id="sched-start-time" required class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">종료 시각</span>
+                            <input type="time" id="sched-end-time" required class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-teal-500">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">장소/메모</label>
-                        <input type="text" id="sched-location" placeholder="예: 온실 / 스마트팜 스튜디오" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
+
+                    <!-- Quick Preset Buttons -->
+                    <div class="pt-1">
+                        <span class="text-[10px] font-semibold text-slate-400 block mb-1.5">⚡ 원클릭 시간대 추천</span>
+                        <div class="grid grid-cols-4 gap-1.5 text-xs">
+                            <button type="button" onclick="setPresetTime('06:00', '08:30')" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-center border border-slate-700/60 transition-all hover:border-teal-500">
+                                🌅 아침<br><span class="text-[9px] text-slate-400">06:00~08:30</span>
+                            </button>
+                            <button type="button" onclick="setPresetTime('09:30', '12:00')" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-center border border-slate-700/60 transition-all hover:border-teal-500">
+                                ☀️ 오전<br><span class="text-[9px] text-slate-400">09:30~12:00</span>
+                            </button>
+                            <button type="button" onclick="setPresetTime('13:30', '16:30')" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-center border border-slate-700/60 transition-all hover:border-teal-500">
+                                🌤️ 오후<br><span class="text-[9px] text-slate-400">13:30~16:30</span>
+                            </button>
+                            <button type="button" onclick="setPresetTime('18:00', '20:30')" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-center border border-slate-700/60 transition-all hover:border-teal-500">
+                                🌙 저녁<br><span class="text-[9px] text-slate-400">18:00~20:30</span>
+                            </button>
+                        </div>
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">장소/메모 (선택)</label>
+                    <input type="text" id="sched-location" placeholder="예: 온실 / 스마트팜 스튜디오" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
                 </div>
 
                 <div class="pt-3 flex items-center justify-end gap-3">
@@ -523,6 +556,16 @@
             'COMMUNITY': { name: '봉사 & 재능기부', icon: 'heart', color: 'text-coral-400', bg: 'bg-coral-500/10', border: 'border-coral-500/20' }
         };
 
+        // Helper to extract start time in minutes for sorting
+        function getStartTimeInMinutes(timeStr) {
+            if (!timeStr) return 0;
+            const match = timeStr.match(/(\d{1,2}):(\d{2})/);
+            if (match) {
+                return parseInt(match[1], 10) * 60 + parseInt(match[2], 10);
+            }
+            return 0;
+        }
+
         // Page Switcher
         function switchPage(page) {
             const pageBucket = document.getElementById('page-bucket');
@@ -563,7 +606,6 @@
             if (savedItems) {
                 try {
                     bucketItems = JSON.parse(savedItems);
-                    // Ensure Smart Farm item is present
                     if (!bucketItems.some(i => i.title.includes('스마트 팜') || i.title.includes('Smart Farm'))) {
                         bucketItems.push(DEFAULT_ITEMS[6]);
                         saveToStorage();
@@ -664,12 +706,16 @@
             lucide.createIcons();
         }
 
-        // Render Timetable (Mon ~ Sun)
+        // Render Timetable (Mon ~ Sun) with AUTOMATIC CHRONOLOGICAL SORTING
         function renderTimetable() {
             const container = document.getElementById('timetable-days-container');
             
             container.innerHTML = DAYS_META.map(day => {
-                const blocks = scheduleData[day.key] || [];
+                let blocks = scheduleData[day.key] || [];
+
+                // AUTO-SORT CHRONOLOGICALLY (Earliest to Latest)
+                blocks.sort((a, b) => getStartTimeInMinutes(a.time) - getStartTimeInMinutes(b.time));
+
                 return `
                     <div class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col justify-between">
                         <div>
@@ -845,7 +891,13 @@
             renderItems();
         }
 
-        // Modal Handlers (Schedule Block - Add & Edit)
+        // Time Picker Quick Preset Helper
+        function setPresetTime(start, end) {
+            document.getElementById('sched-start-time').value = start;
+            document.getElementById('sched-end-time').value = end;
+        }
+
+        // Modal Handlers (Schedule Block - Add & Edit with Time Picker)
         function openScheduleModal(dayKey = 'MON', blockId = null) {
             document.getElementById('sched-day').value = dayKey;
             document.getElementById('schedule-form').reset();
@@ -874,12 +926,28 @@
                 if (foundBlock) {
                     document.getElementById('sched-bucket-id').value = foundBlock.bucketId || '';
                     document.getElementById('sched-title').value = foundBlock.title || '';
-                    document.getElementById('sched-time').value = foundBlock.time || '';
                     document.getElementById('sched-location').value = foundBlock.location || '';
+
+                    // Parse existing time string e.g., "06:00 ~ 08:30"
+                    if (foundBlock.time) {
+                        const parts = foundBlock.time.split('~').map(s => s.trim());
+                        if (parts.length >= 2) {
+                            document.getElementById('sched-start-time').value = parts[0];
+                            document.getElementById('sched-end-time').value = parts[1];
+                        } else if (parts.length === 1) {
+                            document.getElementById('sched-start-time').value = parts[0];
+                            document.getElementById('sched-end-time').value = '';
+                        }
+                    } else {
+                        document.getElementById('sched-start-time').value = '09:00';
+                        document.getElementById('sched-end-time').value = '10:00';
+                    }
                 }
             } else {
                 // Create Mode
                 document.getElementById('schedule-modal-title').innerText = '주간 일정 추가';
+                document.getElementById('sched-start-time').value = '09:00';
+                document.getElementById('sched-end-time').value = '10:30';
             }
 
             document.getElementById('schedule-modal').classList.remove('hidden');
@@ -905,7 +973,11 @@
             const blockId = document.getElementById('sched-block-id').value;
             const bucketId = document.getElementById('sched-bucket-id').value;
             const title = document.getElementById('sched-title').value;
-            const time = document.getElementById('sched-time').value;
+            
+            const startTime = document.getElementById('sched-start-time').value;
+            const endTime = document.getElementById('sched-end-time').value;
+            const timeStr = (startTime && endTime) ? `${startTime} ~ ${endTime}` : (startTime || '09:00');
+
             const location = document.getElementById('sched-location').value;
 
             if (blockId) {
@@ -923,7 +995,7 @@
                 if (!scheduleData[targetDay]) scheduleData[targetDay] = [];
                 scheduleData[targetDay].push({
                     id: blockId,
-                    time: time,
+                    time: timeStr,
                     title: title,
                     bucketId: bucketId,
                     location: location,
@@ -942,7 +1014,7 @@
 
                 scheduleData[targetDay].push({
                     id: 's_' + Date.now(),
-                    time: time,
+                    time: timeStr,
                     title: title,
                     bucketId: bucketId,
                     location: location,
