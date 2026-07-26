@@ -126,7 +126,7 @@
                         </div>
                         <h2 class="text-2xl font-bold text-white mb-2">상사 없는 삶, 오직 나만의 로드맵</h2>
                         <p class="text-slate-400 text-sm leading-relaxed max-w-xl">
-                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, AI 스마트 팜(Smart Farm) 및 몰입형 기술 연구, 저렴한 아침 라운딩과 재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
+                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, AI 스마트 팜 및 NotebookLM 기반 AI 수익화 사업 프로젝트(유튜브·블로그·마이크로벤처·농산물위탁), 저렴한 아침 라운딩과 재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
                         </p>
                     </div>
                     
@@ -136,8 +136,8 @@
                             <span>1순위 목표: 충남 읍/면 소형독채</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <i data-lucide="sprout" class="w-4 h-4 text-teal-400"></i>
-                            <span>NEW: AI 가정용 스마트 팜 구축</span>
+                            <i data-lucide="briefcase" class="w-4 h-4 text-indigo-400"></i>
+                            <span>NotebookLM 연계: AI 수익화 사업 프로젝트</span>
                         </div>
                     </div>
                 </div>
@@ -184,7 +184,7 @@
                         ⛳ 건강 & 여가
                     </button>
                     <button onclick="filterCategory('AI_LEARNING')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
-                        🧠 배움 & AI (스마트팜)
+                        🧠 배움 & AI (스마트팜/수익화)
                     </button>
                     <button onclick="filterCategory('COMMUNITY')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
                         🤝 봉사 & 재능기부
@@ -234,12 +234,12 @@
                     </div>
 
                     <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-start gap-3">
-                        <div class="p-2.5 rounded-lg bg-coral-500/10 text-coral-400">
-                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                        <div class="p-2.5 rounded-lg bg-indigo-500/10 text-indigo-400">
+                            <i data-lucide="briefcase" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <div class="font-bold text-slate-200">로컬 AI & 스마트홈 연구</div>
-                            <div class="text-slate-400 mt-0.5">Home Assistant + 로컬 LLM 통합 아지트 세팅</div>
+                            <div class="font-bold text-slate-200">AI 수익화 5대 파이프라인</div>
+                            <div class="text-slate-400 mt-0.5">농산물위탁 / AI유튜브 / 무인블로그 / Solo-SaaS / 대시보드</div>
                         </div>
                     </div>
                 </div>
@@ -301,14 +301,14 @@
                     <select id="item-category" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500">
                         <option value="HOUSING">🏡 주거 & 정착</option>
                         <option value="SPORTS">⛳ 건강 & 여가</option>
-                        <option value="AI_LEARNING">🧠 배움 & AI (스마트팜)</option>
+                        <option value="AI_LEARNING">🧠 배움 & AI (스마트팜/수익화)</option>
                         <option value="COMMUNITY">🤝 봉사 & 재능기부</option>
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">버킷리스트 제목</label>
-                    <input type="text" id="item-title" required placeholder="예: 집에서 AI 기반 스마트 팜 구축" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500 placeholder-slate-500">
+                    <input type="text" id="item-title" required placeholder="예: AI 수익화 사업 프로젝트" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500 placeholder-slate-500">
                 </div>
 
                 <div>
@@ -328,7 +328,7 @@
         </div>
     </div>
 
-    <!-- Modal for Adding/Editing Schedule Block (Improved UX with Time Picker) -->
+    <!-- Modal for Adding/Editing Schedule Block -->
     <div id="schedule-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="glass-card bg-navy-800 rounded-2xl max-w-md w-full p-6 border border-slate-700 shadow-2xl relative">
             <div class="flex items-center justify-between mb-5">
@@ -367,7 +367,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">일정 타이틀</label>
-                    <input type="text" id="sched-title" required placeholder="예: AI 스마트 팜 센서/관수 제어 연구" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
+                    <input type="text" id="sched-title" required placeholder="예: AI 수익화 사업 프로젝트 (유튜브/블로그)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
                 </div>
 
                 <!-- Easy Time Picker Controls -->
@@ -406,7 +406,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">장소/메모 (선택)</label>
-                    <input type="text" id="sched-location" placeholder="예: 온실 / 스마트팜 스튜디오" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
+                    <input type="text" id="sched-location" placeholder="예: 서재 / 온라인 스튜디오" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
                 </div>
 
                 <div class="pt-3 flex items-center justify-end gap-3">
@@ -484,13 +484,21 @@
             {
                 id: '8',
                 category: 'AI_LEARNING',
+                title: '🚀 AI 수익화 사업 프로젝트 (NotebookLM 연계 5대 파이프라인)',
+                desc: '①충남 로컬 농산물 온라인 위탁중개(쿠팡) ②1인 AI 유튜브 채널 자동화 ③AI 애드센스/블로그 무인 수익화 ④피터 레벨스 스타일 1인 AI 마이크로 벤처(Solo-SaaS) ⑤데이터/대시보드 실시간 자동화 서비스',
+                completed: false,
+                date: '2026-07-26'
+            },
+            {
+                id: '9',
+                category: 'AI_LEARNING',
                 title: '자유로운 독서 삼매경',
                 desc: '시간 제약 없이 읽고 싶었던 다양한 분야의 서적들을 깊이 있게 완독',
                 completed: false,
                 date: '2026-07-26'
             },
             {
-                id: '9',
+                id: '10',
                 category: 'COMMUNITY',
                 title: '지역사회 재능기부 & 봉사활동',
                 desc: '스카티님의 높은 기술적 역량과 지식을 활용해 지역 주민과 함께하는 의미 있는 사회적 기여',
@@ -508,11 +516,11 @@
             ],
             'TUE': [
                 { id: 's4', time: '06:00 ~ 09:30', title: '지역 골프장 얼리버드 라운드', bucketId: '4', location: '지역 골프장', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's5', time: '13:30 ~ 16:30', title: '자유로운 독서 삼매경', bucketId: '8', location: '테라스 / 서재', color: 'border-indigo-500/40 bg-indigo-500/10' }
+                { id: 's5', time: '13:30 ~ 16:30', title: '자유로운 독서 삼매경', bucketId: '9', location: '테라스 / 서재', color: 'border-indigo-500/40 bg-indigo-500/10' }
             ],
             'WED': [
                 { id: 's6', time: '07:00 ~ 08:30', title: '자연 속 매일 운동 & 스트레칭', bucketId: '5', location: '마당 테라스', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's7', time: '10:00 ~ 12:00', title: '지역사회 재능기부 & 봉사', bucketId: '9', location: '지역 문화/복지 센터', color: 'border-coral-500/40 bg-coral-500/10' },
+                { id: 's7', time: '10:00 ~ 12:00', title: '지역사회 재능기부 & 봉사', bucketId: '10', location: '지역 문화/복지 센터', color: 'border-coral-500/40 bg-coral-500/10' },
                 { id: 's8', time: '14:00 ~ 17:00', title: '몰입형 AI 기술 공부 & 코드 아트', bucketId: '6', location: '아지트 스튜디오', color: 'border-indigo-500/40 bg-indigo-500/10' }
             ],
             'THU': [
@@ -522,7 +530,7 @@
             'FRI': [
                 { id: 's11', time: '07:00 ~ 08:30', title: '자연 속 매일 운동 & 산책', bucketId: '5', location: '마을 호수 산책로', color: 'border-teal-500/40 bg-teal-500/10' },
                 { id: 's12', time: '09:30 ~ 12:00', title: '몰입형 AI 기술 공부 & 연구', bucketId: '6', location: '아지트 서재', color: 'border-indigo-500/40 bg-indigo-500/10' },
-                { id: 's13', time: '14:00 ~ 16:30', title: '지역사회 재능기부 준비/멘토링', bucketId: '9', location: '지역 센터', color: 'border-coral-500/40 bg-coral-500/10' }
+                { id: 's13', time: '14:00 ~ 17:00', title: 'AI 수익화 사업 프로젝트 (유튜브/블로그/SaaS)', bucketId: '8', location: '아지트 서재 / 스마트 스튜디오', color: 'border-indigo-500/40 bg-indigo-500/10' }
             ],
             'SAT': [
                 { id: 's14', time: '08:00 ~ 11:00', title: '자연 속 매일 운동 & 드라이브', bucketId: '5', location: '충남 경관 드라이브 코스', color: 'border-teal-500/40 bg-teal-500/10' },
@@ -530,7 +538,7 @@
                 { id: 's16', time: '16:00 ~ 18:00', title: '나만의 아지트 & 마당 커스텀', bucketId: '3', location: '아지트 마당/데크', color: 'border-amber-500/40 bg-amber-500/10' }
             ],
             'SUN': [
-                { id: 's17', time: '09:00 ~ 12:00', title: '자유로운 독서 삼매경', bucketId: '8', location: '햇살 드는 거실', color: 'border-indigo-500/40 bg-indigo-500/10' },
+                { id: 's17', time: '09:00 ~ 12:00', title: '자유로운 독서 삼매경', bucketId: '9', location: '햇살 드는 거실', color: 'border-indigo-500/40 bg-indigo-500/10' },
                 { id: 's18', time: '15:00 ~ 17:00', title: '주간 회고 & 차주 버킷리스트 수립', bucketId: '', location: '아지트 서재', color: 'border-teal-500/40 bg-teal-500/10' }
             ]
         };
@@ -552,7 +560,7 @@
         const CAT_CONFIG = {
             'HOUSING': { name: '주거 & 정착', icon: 'home', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
             'SPORTS': { name: '건강 & 여가', icon: 'flag', color: 'text-teal-400', bg: 'bg-teal-500/10', border: 'border-teal-500/20' },
-            'AI_LEARNING': { name: '배움 & AI (스마트팜)', icon: 'sprout', color: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20' },
+            'AI_LEARNING': { name: '배움 & AI (스마트팜/수익화)', icon: 'sprout', color: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20' },
             'COMMUNITY': { name: '봉사 & 재능기부', icon: 'heart', color: 'text-coral-400', bg: 'bg-coral-500/10', border: 'border-coral-500/20' }
         };
 
@@ -606,8 +614,8 @@
             if (savedItems) {
                 try {
                     bucketItems = JSON.parse(savedItems);
-                    if (!bucketItems.some(i => i.title.includes('스마트 팜') || i.title.includes('Smart Farm'))) {
-                        bucketItems.push(DEFAULT_ITEMS[6]);
+                    if (!bucketItems.some(i => i.title.includes('AI 수익화 사업 프로젝트'))) {
+                        bucketItems.push(DEFAULT_ITEMS[7]);
                         saveToStorage();
                     }
                 } catch(e) { bucketItems = DEFAULT_ITEMS; }
