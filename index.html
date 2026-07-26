@@ -126,7 +126,7 @@
                         </div>
                         <h2 class="text-2xl font-bold text-white mb-2">상사 없는 삶, 오직 나만의 로드맵</h2>
                         <p class="text-slate-400 text-sm leading-relaxed max-w-xl">
-                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, AI 스마트 팜 및 NotebookLM 기반 AI 수익화 사업 프로젝트(유튜브·블로그·마이크로벤처·농산물위탁), 저렴한 아침 라운딩과 재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
+                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, AI 스마트 팜 및 NotebookLM 연계 AI 수익화 사업 프로젝트(유튜브·블로그·마이크로벤처·농산물위탁), 저렴한 아침 라운딩과 재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
                         </p>
                     </div>
                     
@@ -423,10 +423,10 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Initial Default Bucket Items
+        // Unique string IDs to prevent collisions
         const DEFAULT_ITEMS = [
             {
-                id: '1',
+                id: 'b_housing_1',
                 category: 'HOUSING',
                 title: "지자체 '살아보기' 프로그램 1년 탐험",
                 desc: '충남/전북 지원 스테이 프로그램을 활용해 몇 주~몇 달씩 실거주하며 가장 맘에 드는 지역 탐색',
@@ -434,7 +434,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '2',
+                id: 'b_housing_2',
                 category: 'HOUSING',
                 title: '운명의 소형 독채 매입',
                 desc: '탐험 후 마음이 끌린 충남 읍/면 지역에 예산 1.5억 이내, 20평 이내 소형 주택 매입 (다주택 비과세)',
@@ -442,7 +442,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '3',
+                id: 'b_housing_3',
                 category: 'HOUSING',
                 title: '나만의 아지트 & 서재 세팅',
                 desc: '잡초 걱정 없는 데크/자갈 마당, 자연 조망 테라스, 편안한 독서/작업 공간 완성',
@@ -450,7 +450,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '4',
+                id: 'b_sports_1',
                 category: 'SPORTS',
                 title: '지역 골프장 얼리버드 라운드',
                 desc: '아침 일찍 지역의 저렴한 골프장에서 쾌적한 아침 공기를 마시며 여유로운 라운딩',
@@ -458,7 +458,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '5',
+                id: 'b_sports_2',
                 category: 'SPORTS',
                 title: '자연 속 매일 운동 & 독서',
                 desc: '맑은 공기와 풍경 속에서 매일 꾸준한 운동과 독서로 몸과 마음 리셋',
@@ -466,7 +466,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '6',
+                id: 'b_ai_1',
                 category: 'AI_LEARNING',
                 title: '몰입형 AI 기술 공부 & 연구',
                 desc: '조직의 목적이 아닌 오직 나만의 재미와 호기심을 위한 최신 AI 알고리즘/프로젝트 연구',
@@ -474,7 +474,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '7',
+                id: 'b_ai_smart_farm',
                 category: 'AI_LEARNING',
                 title: '집에서 AI 기반 스마트 팜(Smart Farm) 구축 & 재배',
                 desc: '온도·습도·조명·자동 관수를 AI 및 센서(Raspberry Pi/Home Assistant)로 제어하여 허브/채소를 자동 재배하는 스마트팜 시스템 완성',
@@ -482,7 +482,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '8',
+                id: 'b_ai_monetize',
                 category: 'AI_LEARNING',
                 title: '🚀 AI 수익화 사업 프로젝트 (NotebookLM 연계 5대 파이프라인)',
                 desc: '①충남 로컬 농산물 온라인 위탁중개(쿠팡) ②1인 AI 유튜브 채널 자동화 ③AI 애드센스/블로그 무인 수익화 ④피터 레벨스 스타일 1인 AI 마이크로 벤처(Solo-SaaS) ⑤데이터/대시보드 실시간 자동화 서비스',
@@ -490,7 +490,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '9',
+                id: 'b_ai_books',
                 category: 'AI_LEARNING',
                 title: '자유로운 독서 삼매경',
                 desc: '시간 제약 없이 읽고 싶었던 다양한 분야의 서적들을 깊이 있게 완독',
@@ -498,7 +498,7 @@
                 date: '2026-07-26'
             },
             {
-                id: '10',
+                id: 'b_community_1',
                 category: 'COMMUNITY',
                 title: '지역사회 재능기부 & 봉사활동',
                 desc: '스카티님의 높은 기술적 역량과 지식을 활용해 지역 주민과 함께하는 의미 있는 사회적 기여',
@@ -510,35 +510,35 @@
         // Default Weekly Timetable (월 ~ 일)
         const DEFAULT_SCHEDULE = {
             'MON': [
-                { id: 's1', time: '06:30 ~ 08:30', title: '자연 속 매일 운동 & 산책', bucketId: '5', location: '지자체 마을 산책로', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's2', time: '09:30 ~ 12:00', title: '몰입형 AI 기술 공부 & 연구', bucketId: '6', location: '아지트 서재', color: 'border-indigo-500/40 bg-indigo-500/10' },
-                { id: 's3', time: '14:00 ~ 17:00', title: "지자체 '살아보기' 마을 탐색", bucketId: '1', location: '충남 지자체 현장', color: 'border-amber-500/40 bg-amber-500/10' }
+                { id: 's1', time: '06:30 ~ 08:30', title: '자연 속 매일 운동 & 산책', bucketId: 'b_sports_2', location: '지자체 마을 산책로', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's2', time: '09:30 ~ 12:00', title: '몰입형 AI 기술 공부 & 연구', bucketId: 'b_ai_1', location: '아지트 서재', color: 'border-indigo-500/40 bg-indigo-500/10' },
+                { id: 's3', time: '14:00 ~ 17:00', title: "지자체 '살아보기' 마을 탐색", bucketId: 'b_housing_1', location: '충남 지자체 현장', color: 'border-amber-500/40 bg-amber-500/10' }
             ],
             'TUE': [
-                { id: 's4', time: '06:00 ~ 09:30', title: '지역 골프장 얼리버드 라운드', bucketId: '4', location: '지역 골프장', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's5', time: '13:30 ~ 16:30', title: '자유로운 독서 삼매경', bucketId: '9', location: '테라스 / 서재', color: 'border-indigo-500/40 bg-indigo-500/10' }
+                { id: 's4', time: '06:00 ~ 09:30', title: '지역 골프장 얼리버드 라운드', bucketId: 'b_sports_1', location: '지역 골프장', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's5', time: '13:30 ~ 16:30', title: '자유로운 독서 삼매경', bucketId: 'b_ai_books', location: '테라스 / 서재', color: 'border-indigo-500/40 bg-indigo-500/10' }
             ],
             'WED': [
-                { id: 's6', time: '07:00 ~ 08:30', title: '자연 속 매일 운동 & 스트레칭', bucketId: '5', location: '마당 테라스', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's7', time: '10:00 ~ 12:00', title: '지역사회 재능기부 & 봉사', bucketId: '10', location: '지역 문화/복지 센터', color: 'border-coral-500/40 bg-coral-500/10' },
-                { id: 's8', time: '14:00 ~ 17:00', title: '몰입형 AI 기술 공부 & 코드 아트', bucketId: '6', location: '아지트 스튜디오', color: 'border-indigo-500/40 bg-indigo-500/10' }
+                { id: 's6', time: '07:00 ~ 08:30', title: '자연 속 매일 운동 & 스트레칭', bucketId: 'b_sports_2', location: '마당 테라스', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's7', time: '10:00 ~ 12:00', title: '지역사회 재능기부 & 봉사', bucketId: 'b_community_1', location: '지역 문화/복지 센터', color: 'border-coral-500/40 bg-coral-500/10' },
+                { id: 's8', time: '14:00 ~ 17:00', title: '몰입형 AI 기술 공부 & 코드 아트', bucketId: 'b_ai_1', location: '아지트 스튜디오', color: 'border-indigo-500/40 bg-indigo-500/10' }
             ],
             'THU': [
-                { id: 's9', time: '06:00 ~ 09:30', title: '지역 골프장 얼리버드 라운드', bucketId: '4', location: '지역 골프장', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's10', time: '14:00 ~ 17:00', title: "지자체 '살아보기' 소형 주택 탐방", bucketId: '2', location: '충남 읍/면 마을', color: 'border-amber-500/40 bg-amber-500/10' }
+                { id: 's9', time: '06:00 ~ 09:30', title: '지역 골프장 얼리버드 라운드', bucketId: 'b_sports_1', location: '지역 골프장', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's10', time: '14:00 ~ 17:00', title: "지자체 '살아보기' 소형 주택 탐방", bucketId: 'b_housing_2', location: '충남 읍/면 마을', color: 'border-amber-500/40 bg-amber-500/10' }
             ],
             'FRI': [
-                { id: 's11', time: '07:00 ~ 08:30', title: '자연 속 매일 운동 & 산책', bucketId: '5', location: '마을 호수 산책로', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's12', time: '09:30 ~ 12:00', title: '몰입형 AI 기술 공부 & 연구', bucketId: '6', location: '아지트 서재', color: 'border-indigo-500/40 bg-indigo-500/10' },
-                { id: 's13', time: '14:00 ~ 17:00', title: 'AI 수익화 사업 프로젝트 (유튜브/블로그/SaaS)', bucketId: '8', location: '아지트 서재 / 스마트 스튜디오', color: 'border-indigo-500/40 bg-indigo-500/10' }
+                { id: 's11', time: '07:00 ~ 08:30', title: '자연 속 매일 운동 & 산책', bucketId: 'b_sports_2', location: '마을 호수 산책로', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's12', time: '09:30 ~ 12:00', title: '몰입형 AI 기술 공부 & 연구', bucketId: 'b_ai_1', location: '아지트 서재', color: 'border-indigo-500/40 bg-indigo-500/10' },
+                { id: 's13', time: '14:00 ~ 17:00', title: 'AI 수익화 사업 프로젝트 (유튜브/블로그/SaaS)', bucketId: 'b_ai_monetize', location: '아지트 서재 / 온라인 스튜디오', color: 'border-indigo-500/40 bg-indigo-500/10' }
             ],
             'SAT': [
-                { id: 's14', time: '08:00 ~ 11:00', title: '자연 속 매일 운동 & 드라이브', bucketId: '5', location: '충남 경관 드라이브 코스', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's15', time: '13:00 ~ 15:30', title: 'AI 스마트 팜 센서/관수 연구 & 재배', bucketId: '7', location: '스마트팜 온실 스튜디오', color: 'border-teal-500/40 bg-teal-500/10' },
-                { id: 's16', time: '16:00 ~ 18:00', title: '나만의 아지트 & 마당 커스텀', bucketId: '3', location: '아지트 마당/데크', color: 'border-amber-500/40 bg-amber-500/10' }
+                { id: 's14', time: '08:00 ~ 11:00', title: '자연 속 매일 운동 & 드라이브', bucketId: 'b_sports_2', location: '충남 경관 드라이브 코스', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's15', time: '13:00 ~ 15:30', title: 'AI 스마트 팜 센서/관수 연구 & 재배', bucketId: 'b_ai_smart_farm', location: '스마트팜 온실 스튜디오', color: 'border-teal-500/40 bg-teal-500/10' },
+                { id: 's16', time: '16:00 ~ 18:00', title: '나만의 아지트 & 마당 커스텀', bucketId: 'b_housing_3', location: '아지트 마당/데크', color: 'border-amber-500/40 bg-amber-500/10' }
             ],
             'SUN': [
-                { id: 's17', time: '09:00 ~ 12:00', title: '자유로운 독서 삼매경', bucketId: '9', location: '햇살 드는 거실', color: 'border-indigo-500/40 bg-indigo-500/10' },
+                { id: 's17', time: '09:00 ~ 12:00', title: '자유로운 독서 삼매경', bucketId: 'b_ai_books', location: '햇살 드는 거실', color: 'border-indigo-500/40 bg-indigo-500/10' },
                 { id: 's18', time: '15:00 ~ 17:00', title: '주간 회고 & 차주 버킷리스트 수립', bucketId: '', location: '아지트 서재', color: 'border-teal-500/40 bg-teal-500/10' }
             ]
         };
@@ -564,7 +564,6 @@
             'COMMUNITY': { name: '봉사 & 재능기부', icon: 'heart', color: 'text-coral-400', bg: 'bg-coral-500/10', border: 'border-coral-500/20' }
         };
 
-        // Helper to extract start time in minutes for sorting
         function getStartTimeInMinutes(timeStr) {
             if (!timeStr) return 0;
             const match = timeStr.match(/(\d{1,2}):(\d{2})/);
@@ -608,17 +607,41 @@
             }
         }
 
-        // Initialize App
+        // Initialize App & Deduplicate IDs
         function initApp() {
             const savedItems = localStorage.getItem('scotii_bucket_list');
             if (savedItems) {
                 try {
-                    bucketItems = JSON.parse(savedItems);
-                    if (!bucketItems.some(i => i.title.includes('AI 수익화 사업 프로젝트'))) {
-                        bucketItems.push(DEFAULT_ITEMS[7]);
-                        saveToStorage();
+                    let loaded = JSON.parse(savedItems);
+                    const seenIds = new Set();
+                    bucketItems = [];
+
+                    for (let item of loaded) {
+                        let itemId = String(item.id || '');
+                        // If ID is missing or duplicate, re-assign a clean unique string ID
+                        if (!itemId || seenIds.has(itemId)) {
+                            itemId = 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                            item.id = itemId;
+                        }
+                        seenIds.add(itemId);
+                        bucketItems.push(item);
                     }
-                } catch(e) { bucketItems = DEFAULT_ITEMS; }
+
+                    // Add Smart Farm if missing
+                    if (!bucketItems.some(i => i.title && (i.title.includes('스마트 팜') || i.title.includes('Smart Farm')))) {
+                        bucketItems.push(DEFAULT_ITEMS.find(x => x.id === 'b_ai_smart_farm'));
+                    }
+
+                    // Add AI Monetize if missing
+                    if (!bucketItems.some(i => i.title && i.title.includes('AI 수익화 사업 프로젝트'))) {
+                        bucketItems.push(DEFAULT_ITEMS.find(x => x.id === 'b_ai_monetize'));
+                    }
+
+                    saveToStorage();
+                } catch(e) {
+                    bucketItems = DEFAULT_ITEMS;
+                    saveToStorage();
+                }
             } else {
                 bucketItems = DEFAULT_ITEMS;
                 saveToStorage();
@@ -645,7 +668,7 @@
             localStorage.setItem('scotii_weekly_schedule', JSON.stringify(scheduleData));
         }
 
-        // Render Bucket List
+        // Render Bucket List Items safely
         function renderItems() {
             const container = document.getElementById('bucket-list-container');
             const statusFilter = document.getElementById('status-select').value;
@@ -668,6 +691,7 @@
             } else {
                 container.innerHTML = filtered.map(item => {
                     const cat = CAT_CONFIG[item.category] || CAT_CONFIG['HOUSING'];
+                    const itemIdEscaped = escapeJsParam(item.id);
                     return `
                         <div class="glass-card rounded-2xl p-5 border ${item.completed ? 'border-teal-500/30 bg-slate-800/30' : 'border-slate-800'} transition-all hover:border-slate-700 flex flex-col justify-between group">
                             <div>
@@ -677,17 +701,17 @@
                                         <span>${cat.name}</span>
                                     </span>
                                     <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                                        <button onclick="editItem('${item.id}')" class="p-1.5 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-800">
+                                        <button onclick="editItem('${itemIdEscaped}')" class="p-1.5 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-800" title="수정">
                                             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                         </button>
-                                        <button onclick="deleteItem('${item.id}')" class="p-1.5 text-slate-400 hover:text-coral-400 rounded-lg hover:bg-slate-800">
+                                        <button onclick="deleteItem('${itemIdEscaped}')" class="p-1.5 text-slate-400 hover:text-coral-400 rounded-lg hover:bg-slate-800" title="삭제">
                                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                         </button>
                                     </div>
                                 </div>
 
                                 <div class="flex items-start gap-3 my-2">
-                                    <button onclick="toggleItem('${item.id}')" class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-md border ${item.completed ? 'bg-teal-500 border-teal-500 text-white' : 'border-slate-600 hover:border-coral-400'} flex items-center justify-center transition-colors">
+                                    <button onclick="toggleItem('${itemIdEscaped}')" class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-md border ${item.completed ? 'bg-teal-500 border-teal-500 text-white' : 'border-slate-600 hover:border-coral-400'} flex items-center justify-center transition-colors">
                                         ${item.completed ? '<i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>' : ''}
                                     </button>
                                     <div>
@@ -714,14 +738,14 @@
             lucide.createIcons();
         }
 
-        // Render Timetable (Mon ~ Sun) with AUTOMATIC CHRONOLOGICAL SORTING
+        // Render Timetable (Mon ~ Sun) with Chronological Sorting
         function renderTimetable() {
             const container = document.getElementById('timetable-days-container');
             
             container.innerHTML = DAYS_META.map(day => {
                 let blocks = scheduleData[day.key] || [];
 
-                // AUTO-SORT CHRONOLOGICALLY (Earliest to Latest)
+                // Sort chronologically
                 blocks.sort((a, b) => getStartTimeInMinutes(a.time) - getStartTimeInMinutes(b.time));
 
                 return `
@@ -742,14 +766,15 @@
                                         일정이 없습니다
                                     </div>
                                 ` : blocks.map(b => {
-                                    const linkedBucket = bucketItems.find(i => i.id === b.bucketId);
+                                    const linkedBucket = bucketItems.find(i => String(i.id) === String(b.bucketId));
+                                    const blockIdEscaped = escapeJsParam(b.id);
                                     return `
-                                        <div onclick="openScheduleModal('${day.key}', '${b.id}')" class="p-3 rounded-xl border ${b.color || 'border-teal-500/40 bg-teal-500/10'} relative group cursor-pointer hover:border-teal-400 hover:scale-[1.02] transition-all shadow-sm hover:shadow-teal-500/10">
+                                        <div onclick="openScheduleModal('${day.key}', '${blockIdEscaped}')" class="p-3 rounded-xl border ${b.color || 'border-teal-500/40 bg-teal-500/10'} relative group cursor-pointer hover:border-teal-400 hover:scale-[1.02] transition-all shadow-sm hover:shadow-teal-500/10">
                                             <div class="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <span class="p-1 text-slate-400 hover:text-teal-300 rounded-lg" title="시간/내용 수정">
                                                     <i data-lucide="edit-3" class="w-3 h-3"></i>
                                                 </span>
-                                                <button onclick="event.stopPropagation(); deleteScheduleBlock('${day.key}', '${b.id}')" class="p-1 text-slate-400 hover:text-coral-400 rounded-lg" title="삭제">
+                                                <button onclick="event.stopPropagation(); deleteScheduleBlock('${day.key}', '${blockIdEscaped}')" class="p-1 text-slate-400 hover:text-coral-400 rounded-lg" title="삭제">
                                                     <i data-lucide="x" class="w-3 h-3"></i>
                                                 </button>
                                             </div>
@@ -812,7 +837,7 @@
 
         // Toggle Item Complete
         function toggleItem(id) {
-            const item = bucketItems.find(i => i.id === id);
+            const item = bucketItems.find(i => String(i.id) === String(id));
             if (item) {
                 item.completed = !item.completed;
                 saveToStorage();
@@ -823,7 +848,7 @@
         // Delete Item
         function deleteItem(id) {
             if (confirm('이 버킷리스트 항목을 삭제하시겠습니까?')) {
-                bucketItems = bucketItems.filter(i => i.id !== id);
+                bucketItems = bucketItems.filter(i => String(i.id) !== String(id));
                 saveToStorage();
                 renderItems();
             }
@@ -857,11 +882,11 @@
         }
 
         function editItem(id) {
-            const item = bucketItems.find(i => i.id === id);
+            const item = bucketItems.find(i => String(i.id) === String(id));
             if (item) {
                 document.getElementById('item-id').value = item.id;
-                document.getElementById('item-category').value = item.category;
-                document.getElementById('item-title').value = item.title;
+                document.getElementById('item-category').value = item.category || 'AI_LEARNING';
+                document.getElementById('item-title').value = item.title || '';
                 document.getElementById('item-desc').value = item.desc || '';
                 document.getElementById('modal-title').innerText = '버킷리스트 수정';
                 document.getElementById('item-modal').classList.remove('hidden');
@@ -876,7 +901,7 @@
             const desc = document.getElementById('item-desc').value;
 
             if (id) {
-                const item = bucketItems.find(i => i.id === id);
+                const item = bucketItems.find(i => String(i.id) === String(id));
                 if (item) {
                     item.category = category;
                     item.title = title;
@@ -884,7 +909,7 @@
                 }
             } else {
                 const newItem = {
-                    id: Date.now().toString(),
+                    id: 'b_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
                     category: category,
                     title: title,
                     desc: desc,
@@ -916,7 +941,7 @@
             const bucketSelect = document.getElementById('sched-bucket-id');
             bucketSelect.innerHTML = `
                 <option value="">-- 직접 입력 또는 버킷리스트 선택 --</option>
-                ${bucketItems.map(i => `<option value="${i.id}">${escapeHtml(i.title)}</option>`).join('')}
+                ${bucketItems.map(i => `<option value="${escapeHtml(i.id)}">${escapeHtml(i.title)}</option>`).join('')}
             `;
 
             if (blockId) {
@@ -924,7 +949,7 @@
                 document.getElementById('schedule-modal-title').innerText = '주간 일정 수정 (시간/내용)';
                 let foundBlock = null;
                 for (const d in scheduleData) {
-                    const b = (scheduleData[d] || []).find(x => x.id === blockId);
+                    const b = (scheduleData[d] || []).find(x => String(x.id) === String(blockId));
                     if (b) {
                         foundBlock = b;
                         document.getElementById('sched-day').value = d;
@@ -936,7 +961,6 @@
                     document.getElementById('sched-title').value = foundBlock.title || '';
                     document.getElementById('sched-location').value = foundBlock.location || '';
 
-                    // Parse existing time string e.g., "06:00 ~ 08:30"
                     if (foundBlock.time) {
                         const parts = foundBlock.time.split('~').map(s => s.trim());
                         if (parts.length >= 2) {
@@ -968,7 +992,7 @@
         function autoFillScheduleTitle() {
             const bucketId = document.getElementById('sched-bucket-id').value;
             if (bucketId) {
-                const item = bucketItems.find(i => i.id === bucketId);
+                const item = bucketItems.find(i => String(i.id) === String(bucketId));
                 if (item) {
                     document.getElementById('sched-title').value = item.title;
                 }
@@ -992,7 +1016,7 @@
                 // Update Existing Block
                 let existingColor = 'border-teal-500/40 bg-teal-500/10';
                 for (const d in scheduleData) {
-                    const idx = (scheduleData[d] || []).findIndex(b => b.id === blockId);
+                    const idx = (scheduleData[d] || []).findIndex(b => String(b.id) === String(blockId));
                     if (idx !== -1) {
                         existingColor = scheduleData[d][idx].color || existingColor;
                         scheduleData[d].splice(idx, 1);
@@ -1037,7 +1061,7 @@
 
         function deleteScheduleBlock(day, blockId) {
             if (scheduleData[day]) {
-                scheduleData[day] = scheduleData[day].filter(b => b.id !== blockId);
+                scheduleData[day] = scheduleData[day].filter(b => String(b.id) !== String(blockId));
                 saveScheduleToStorage();
                 renderTimetable();
             }
@@ -1073,7 +1097,11 @@
         }
 
         function escapeHtml(str) {
-            return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;") : '';
+            return str ? String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;") : '';
+        }
+
+        function escapeJsParam(str) {
+            return str ? String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'") : '';
         }
 
         window.onload = initApp;
