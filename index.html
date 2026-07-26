@@ -126,7 +126,7 @@
                         </div>
                         <h2 class="text-2xl font-bold text-white mb-2">상사 없는 삶, 오직 나만의 로드맵</h2>
                         <p class="text-slate-400 text-sm leading-relaxed max-w-xl">
-                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, AI 스마트 팜 및 NotebookLM 연계 AI 수익화 사업 프로젝트(유튜브·블로그·마이크로벤처·농산물위탁), 저렴한 아침 라운딩과 재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
+                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, AI 스마트 팜 및 NotebookLM 연계 AI 수익화 사업 프로젝트(유튜브·블로그·마이크로벤처·농산물위탁), 저렴한 아침 라운딩과 지역사회 봉사/재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
                         </p>
                     </div>
                     
@@ -136,8 +136,8 @@
                             <span>1순위 목표: 충남 읍/면 소형독채</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <i data-lucide="briefcase" class="w-4 h-4 text-indigo-400"></i>
-                            <span>NotebookLM 연계: AI 수익화 사업 프로젝트</span>
+                            <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i>
+                            <span>핵심 가치: 지역사회 봉사 & 재능기부</span>
                         </div>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
                 </div>
             </div>
 
-            <!-- Filter & Search Controls -->
+            <!-- Filter & Reset Controls -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                 <!-- Category Tabs -->
                 <div class="flex items-center gap-1.5 overflow-x-auto pb-2 sm:pb-0 no-scrollbar" id="category-filters">
@@ -191,13 +191,17 @@
                     </button>
                 </div>
 
-                <!-- Status Filter -->
+                <!-- Status Filter & Reset Button -->
                 <div class="flex items-center gap-2 self-end sm:self-auto">
                     <select id="status-select" onchange="renderItems()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-coral-500">
                         <option value="ALL">전체 상태</option>
                         <option value="PENDING">진행 대기</option>
                         <option value="COMPLETED">달성 완료</option>
                     </select>
+                    <button onclick="resetDefaultBucketList()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors text-xs flex items-center gap-1" title="기본 목록 복원">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                        <span class="hidden lg:inline">목록 복원</span>
+                    </button>
                 </div>
             </div>
 
@@ -308,7 +312,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">버킷리스트 제목</label>
-                    <input type="text" id="item-title" required placeholder="예: AI 수익화 사업 프로젝트" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500 placeholder-slate-500">
+                    <input type="text" id="item-title" required placeholder="예: 지역사회 재능기부 & 봉사활동" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500 placeholder-slate-500">
                 </div>
 
                 <div>
@@ -423,7 +427,7 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Unique string IDs to prevent collisions
+        // Unique string IDs for all default items
         const DEFAULT_ITEMS = [
             {
                 id: 'b_housing_1',
@@ -607,7 +611,7 @@
             }
         }
 
-        // Initialize App & Deduplicate IDs
+        // Initialize App & Auto-Restore Missing Default Items (Community, Smart Farm, AI Monetize)
         function initApp() {
             const savedItems = localStorage.getItem('scotii_bucket_list');
             if (savedItems) {
@@ -618,32 +622,35 @@
 
                     for (let item of loaded) {
                         let itemId = String(item.id || '');
-                        // If ID is missing or duplicate, re-assign a clean unique string ID
                         if (!itemId || seenIds.has(itemId)) {
-                            itemId = 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                            itemId = 'b_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
                             item.id = itemId;
                         }
                         seenIds.add(itemId);
                         bucketItems.push(item);
                     }
 
-                    // Add Smart Farm if missing
-                    if (!bucketItems.some(i => i.title && (i.title.includes('스마트 팜') || i.title.includes('Smart Farm')))) {
-                        bucketItems.push(DEFAULT_ITEMS.find(x => x.id === 'b_ai_smart_farm'));
-                    }
+                    // Check and auto-restore any missing default items from DEFAULT_ITEMS
+                    DEFAULT_ITEMS.forEach(defItem => {
+                        const exists = bucketItems.some(i => i.title && (
+                            i.title === defItem.title ||
+                            (defItem.id === 'b_community_1' && (i.title.includes('재능기부') || i.title.includes('봉사'))) ||
+                            (defItem.id === 'b_ai_smart_farm' && i.title.includes('스마트 팜')) ||
+                            (defItem.id === 'b_ai_monetize' && i.title.includes('AI 수익화'))
+                        ));
 
-                    // Add AI Monetize if missing
-                    if (!bucketItems.some(i => i.title && i.title.includes('AI 수익화 사업 프로젝트'))) {
-                        bucketItems.push(DEFAULT_ITEMS.find(x => x.id === 'b_ai_monetize'));
-                    }
+                        if (!exists) {
+                            bucketItems.push({ ...defItem });
+                        }
+                    });
 
                     saveToStorage();
                 } catch(e) {
-                    bucketItems = DEFAULT_ITEMS;
+                    bucketItems = [...DEFAULT_ITEMS];
                     saveToStorage();
                 }
             } else {
-                bucketItems = DEFAULT_ITEMS;
+                bucketItems = [...DEFAULT_ITEMS];
                 saveToStorage();
             }
 
@@ -668,7 +675,15 @@
             localStorage.setItem('scotii_weekly_schedule', JSON.stringify(scheduleData));
         }
 
-        // Render Bucket List Items safely
+        function resetDefaultBucketList() {
+            if (confirm('모든 기본 버킷리스트 항목(봉사/재능기부, 스마트팜, AI수익화 등)을 초기 복원하시겠습니까?')) {
+                bucketItems = [...DEFAULT_ITEMS];
+                saveToStorage();
+                renderItems();
+            }
+        }
+
+        // Render Bucket List Items
         function renderItems() {
             const container = document.getElementById('bucket-list-container');
             const statusFilter = document.getElementById('status-select').value;
