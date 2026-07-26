@@ -126,7 +126,7 @@
                         </div>
                         <h2 class="text-2xl font-bold text-white mb-2">상사 없는 삶, 오직 나만의 로드맵</h2>
                         <p class="text-slate-400 text-sm leading-relaxed max-w-xl">
-                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, AI 스마트 팜 및 NotebookLM 연계 AI 수익화 사업 프로젝트(유튜브·블로그·마이크로벤처·농산물위탁), 저렴한 아침 라운딩과 지역사회 봉사/재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
+                            충남 시골 살아보기 탐험부터 나만의 소형 아지트 구축, AI 스마트 팜 및 NotebookLM 연계 AI 수익화 사업 프로젝트, 아침 라운딩과 지역사회 봉사/재능기부까지. 스카티님의 모든 버킷리스트를 실시간으로 관리하세요.
                         </p>
                     </div>
                     
@@ -136,8 +136,8 @@
                             <span>1순위 목표: 충남 읍/면 소형독채</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i>
-                            <span>핵심 가치: 지역사회 봉사 & 재능기부</span>
+                            <i data-lucide="folder-plus" class="w-4 h-4 text-teal-400"></i>
+                            <span>카테고리 직접 추가 및 필터 관리 가능</span>
                         </div>
                     </div>
                 </div>
@@ -170,29 +170,19 @@
                 </div>
             </div>
 
-            <!-- Filter & Reset Controls -->
+            <!-- Filter & Dynamic Category Management -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-                <!-- Category Tabs -->
+                <!-- Category Tabs Container -->
                 <div class="flex items-center gap-1.5 overflow-x-auto pb-2 sm:pb-0 no-scrollbar" id="category-filters">
-                    <button onclick="filterCategory('ALL')" class="cat-btn active px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap bg-coral-500 text-white shadow-md shadow-coral-500/20 transition-all">
-                        전체 보기
-                    </button>
-                    <button onclick="filterCategory('HOUSING')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
-                        🏡 주거 & 정착
-                    </button>
-                    <button onclick="filterCategory('SPORTS')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
-                        ⛳ 건강 & 여가
-                    </button>
-                    <button onclick="filterCategory('AI_LEARNING')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
-                        🧠 배움 & AI (스마트팜/수익화)
-                    </button>
-                    <button onclick="filterCategory('COMMUNITY')" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
-                        🤝 봉사 & 재능기부
-                    </button>
+                    <!-- Dynamic tabs rendered via JS -->
                 </div>
 
-                <!-- Status Filter & Reset Button -->
+                <!-- Status Filter & Reset Controls -->
                 <div class="flex items-center gap-2 self-end sm:self-auto">
+                    <button onclick="openCategoryModal()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-300 hover:text-teal-200 transition-colors text-xs font-semibold flex items-center gap-1.5 border border-teal-500/30">
+                        <i data-lucide="folder-plus" class="w-3.5 h-3.5"></i>
+                        <span>+ 카테고리 추가</span>
+                    </button>
                     <select id="status-select" onchange="renderItems()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-coral-500">
                         <option value="ALL">전체 상태</option>
                         <option value="PENDING">진행 대기</option>
@@ -200,7 +190,6 @@
                     </select>
                     <button onclick="resetDefaultBucketList()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors text-xs flex items-center gap-1" title="기본 목록 복원">
                         <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                        <span class="hidden lg:inline">목록 복원</span>
                     </button>
                 </div>
             </div>
@@ -301,18 +290,20 @@
                 <input type="hidden" id="item-id">
                 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">카테고리</label>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-semibold text-slate-300">카테고리</label>
+                        <button type="button" onclick="openCategoryModal()" class="text-[11px] text-teal-400 hover:underline flex items-center gap-1">
+                            <span>+ 새 카테고리만들기</span>
+                        </button>
+                    </div>
                     <select id="item-category" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500">
-                        <option value="HOUSING">🏡 주거 & 정착</option>
-                        <option value="SPORTS">⛳ 건강 & 여가</option>
-                        <option value="AI_LEARNING">🧠 배움 & AI (스마트팜/수익화)</option>
-                        <option value="COMMUNITY">🤝 봉사 & 재능기부</option>
+                        <!-- Options generated dynamically -->
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1.5">버킷리스트 제목</label>
-                    <input type="text" id="item-title" required placeholder="예: 지역사회 재능기부 & 봉사활동" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500 placeholder-slate-500">
+                    <input type="text" id="item-title" required placeholder="예: 해외 디지털 노마드 한 달 살기" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-coral-500 placeholder-slate-500">
                 </div>
 
                 <div>
@@ -326,6 +317,54 @@
                     </button>
                     <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-semibold bg-coral-500 hover:bg-coral-600 text-white shadow-lg shadow-coral-500/20 transition-all">
                         저장하기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Adding NEW CATEGORY -->
+    <div id="category-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-card bg-navy-800 rounded-2xl max-w-sm w-full p-6 border border-slate-700 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i data-lucide="folder-plus" class="w-5 h-5 text-teal-400"></i>
+                    <span>새 카테고리 추가</span>
+                </h3>
+                <button onclick="closeCategoryModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="category-form" onsubmit="saveNewCategory(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">카테고리 명</label>
+                    <input type="text" id="cat-name" required placeholder="예: 💰 자산 & 투자" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-teal-500 placeholder-slate-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">대표 이모지</label>
+                        <input type="text" id="cat-emoji" placeholder="예: 💰 또는 ✈️" value="✨" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3.5 py-2.5 text-center focus:outline-none focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">테마 색상</label>
+                        <select id="cat-color" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-2.5 py-2.5 focus:outline-none focus:border-teal-500">
+                            <option value="amber">💛 골드/엠버</option>
+                            <option value="teal">🟢 티얼/에메랄드</option>
+                            <option value="indigo">💜 인디고/퍼플</option>
+                            <option value="coral">❤️ 코랄/로즈</option>
+                            <option value="blue">💙 블루/시안</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pt-3 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeCategoryModal()" class="px-4 py-2.5 rounded-xl text-xs font-medium bg-slate-700 hover:bg-slate-600 text-slate-300 transition-colors">
+                        취소
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-semibold bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 transition-all">
+                        카테고리 생성
                     </button>
                 </div>
             </form>
@@ -427,7 +466,15 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Unique string IDs for all default items
+        // Initial Default Categories
+        const DEFAULT_CATEGORIES = [
+            { id: 'HOUSING', name: '주거 & 정착', emoji: '🏡', icon: 'home', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
+            { id: 'SPORTS', name: '건강 & 여가', emoji: '⛳', icon: 'flag', color: 'text-teal-400', bg: 'bg-teal-500/10', border: 'border-teal-500/20' },
+            { id: 'AI_LEARNING', name: '배움 & AI', emoji: '🧠', icon: 'sprout', color: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20' },
+            { id: 'COMMUNITY', name: '봉사 & 재능기부', emoji: '🤝', icon: 'heart', color: 'text-coral-400', bg: 'bg-coral-500/10', border: 'border-coral-500/20' }
+        ];
+
+        // Unique string IDs for default items
         const DEFAULT_ITEMS = [
             {
                 id: 'b_housing_1',
@@ -557,16 +604,10 @@
             { key: 'SUN', label: '일요일', badge: 'bg-rose-500/20 text-rose-300' }
         ];
 
+        let categories = [];
         let bucketItems = [];
         let scheduleData = {};
         let currentCategory = 'ALL';
-
-        const CAT_CONFIG = {
-            'HOUSING': { name: '주거 & 정착', icon: 'home', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
-            'SPORTS': { name: '건강 & 여가', icon: 'flag', color: 'text-teal-400', bg: 'bg-teal-500/10', border: 'border-teal-500/20' },
-            'AI_LEARNING': { name: '배움 & AI (스마트팜/수익화)', icon: 'sprout', color: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20' },
-            'COMMUNITY': { name: '봉사 & 재능기부', icon: 'heart', color: 'text-coral-400', bg: 'bg-coral-500/10', border: 'border-coral-500/20' }
-        };
 
         function getStartTimeInMinutes(timeStr) {
             if (!timeStr) return 0;
@@ -611,8 +652,20 @@
             }
         }
 
-        // Initialize App & Auto-Restore Missing Default Items (Community, Smart Farm, AI Monetize)
+        // Initialize App
         function initApp() {
+            // Load Categories
+            const savedCats = localStorage.getItem('scotii_categories');
+            if (savedCats) {
+                try {
+                    categories = JSON.parse(savedCats);
+                } catch(e) { categories = [...DEFAULT_CATEGORIES]; }
+            } else {
+                categories = [...DEFAULT_CATEGORIES];
+                saveCategoriesToStorage();
+            }
+
+            // Load Bucket Items
             const savedItems = localStorage.getItem('scotii_bucket_list');
             if (savedItems) {
                 try {
@@ -630,7 +683,7 @@
                         bucketItems.push(item);
                     }
 
-                    // Check and auto-restore any missing default items from DEFAULT_ITEMS
+                    // Ensure default items exist
                     DEFAULT_ITEMS.forEach(defItem => {
                         const exists = bucketItems.some(i => i.title && (
                             i.title === defItem.title ||
@@ -654,6 +707,7 @@
                 saveToStorage();
             }
 
+            // Load Schedule
             const savedSched = localStorage.getItem('scotii_weekly_schedule');
             if (savedSched) {
                 try { scheduleData = JSON.parse(savedSched); } catch(e) { scheduleData = DEFAULT_SCHEDULE; }
@@ -662,9 +716,15 @@
                 saveScheduleToStorage();
             }
 
+            renderCategoryFilterTabs();
+            renderCategorySelectOptions();
             renderItems();
             renderTimetable();
             lucide.createIcons();
+        }
+
+        function saveCategoriesToStorage() {
+            localStorage.setItem('scotii_categories', JSON.stringify(categories));
         }
 
         function saveToStorage() {
@@ -676,11 +736,96 @@
         }
 
         function resetDefaultBucketList() {
-            if (confirm('모든 기본 버킷리스트 항목(봉사/재능기부, 스마트팜, AI수익화 등)을 초기 복원하시겠습니까?')) {
+            if (confirm('모든 기본 카테고리 및 버킷리스트 항목을 초기 복원하시겠습니까?')) {
+                categories = [...DEFAULT_CATEGORIES];
                 bucketItems = [...DEFAULT_ITEMS];
+                saveCategoriesToStorage();
                 saveToStorage();
+                renderCategoryFilterTabs();
+                renderCategorySelectOptions();
                 renderItems();
             }
+        }
+
+        // Render Dynamic Category Filter Tabs
+        function renderCategoryFilterTabs() {
+            const container = document.getElementById('category-filters');
+            let html = `
+                <button onclick="filterCategory('ALL')" class="cat-btn ${currentCategory === 'ALL' ? 'bg-coral-500 text-white shadow-md shadow-coral-500/20 font-semibold' : 'bg-slate-800 text-slate-300 font-medium'} px-3.5 py-1.5 rounded-xl text-xs whitespace-nowrap transition-all">
+                    전체 보기
+                </button>
+            `;
+
+            categories.forEach(cat => {
+                const active = currentCategory === cat.id;
+                html += `
+                    <button onclick="filterCategory('${escapeJsParam(cat.id)}')" class="cat-btn ${active ? 'bg-coral-500 text-white shadow-md shadow-coral-500/20 font-semibold' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium'} px-3.5 py-1.5 rounded-xl text-xs whitespace-nowrap transition-all flex items-center gap-1.5">
+                        <span>${cat.emoji || '📌'}</span>
+                        <span>${escapeHtml(cat.name)}</span>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Render Select Options for Add/Edit Bucket Item Modal
+        function renderCategorySelectOptions() {
+            const select = document.getElementById('item-category');
+            select.innerHTML = categories.map(cat => `
+                <option value="${escapeHtml(cat.id)}">${cat.emoji || '📌'} ${escapeHtml(cat.name)}</option>
+            `).join('');
+        }
+
+        // Modal Handlers for NEW CATEGORY
+        function openCategoryModal() {
+            document.getElementById('category-form').reset();
+            document.getElementById('category-modal').classList.remove('hidden');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('category-modal').classList.add('hidden');
+        }
+
+        function saveNewCategory(e) {
+            e.preventDefault();
+            const name = document.getElementById('cat-name').value.trim();
+            const emoji = document.getElementById('cat-emoji').value.trim() || '✨';
+            const colorScheme = document.getElementById('cat-color').value;
+
+            if (!name) return;
+
+            const colorMap = {
+                amber: { color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
+                teal: { color: 'text-teal-400', bg: 'bg-teal-500/10', border: 'border-teal-500/20' },
+                indigo: { color: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20' },
+                coral: { color: 'text-coral-400', bg: 'bg-coral-500/10', border: 'border-coral-500/20' },
+                blue: { color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20' }
+            };
+
+            const styles = colorMap[colorScheme] || colorMap.teal;
+            const newCatId = 'CAT_' + Date.now();
+
+            const newCategory = {
+                id: newCatId,
+                name: name,
+                emoji: emoji,
+                icon: 'star',
+                color: styles.color,
+                bg: styles.bg,
+                border: styles.border
+            };
+
+            categories.push(newCategory);
+            saveCategoriesToStorage();
+
+            closeCategoryModal();
+            renderCategoryFilterTabs();
+            renderCategorySelectOptions();
+
+            // Set select to new category if item modal is open
+            document.getElementById('item-category').value = newCatId;
+            lucide.createIcons();
         }
 
         // Render Bucket List Items
@@ -705,15 +850,15 @@
                 `;
             } else {
                 container.innerHTML = filtered.map(item => {
-                    const cat = CAT_CONFIG[item.category] || CAT_CONFIG['HOUSING'];
+                    const catObj = categories.find(c => c.id === item.category) || categories[0] || { name: '일반', emoji: '📌', color: 'text-slate-300', bg: 'bg-slate-800', border: 'border-slate-700' };
                     const itemIdEscaped = escapeJsParam(item.id);
                     return `
                         <div class="glass-card rounded-2xl p-5 border ${item.completed ? 'border-teal-500/30 bg-slate-800/30' : 'border-slate-800'} transition-all hover:border-slate-700 flex flex-col justify-between group">
                             <div>
                                 <div class="flex items-center justify-between mb-3">
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${cat.bg} ${cat.color} border ${cat.border}">
-                                        <i data-lucide="${cat.icon}" class="w-3.5 h-3.5"></i>
-                                        <span>${cat.name}</span>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${catObj.bg} ${catObj.color} border ${catObj.border}">
+                                        <span>${catObj.emoji || '📌'}</span>
+                                        <span>${escapeHtml(catObj.name)}</span>
                                     </span>
                                     <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                                         <button onclick="editItem('${itemIdEscaped}')" class="p-1.5 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-800" title="수정">
@@ -870,17 +1015,9 @@
         }
 
         // Filter Category
-        function filterCategory(cat) {
-            currentCategory = cat;
-            const buttons = document.querySelectorAll('#category-filters button');
-            buttons.forEach(btn => {
-                btn.classList.remove('bg-coral-500', 'text-white', 'shadow-md', 'shadow-coral-500/20');
-                btn.classList.add('bg-slate-800', 'text-slate-300');
-            });
-
-            event.target.closest('button').classList.remove('bg-slate-800', 'text-slate-300');
-            event.target.closest('button').classList.add('bg-coral-500', 'text-white', 'shadow-md', 'shadow-coral-500/20');
-
+        function filterCategory(catId) {
+            currentCategory = catId;
+            renderCategoryFilterTabs();
             renderItems();
         }
 
@@ -889,6 +1026,7 @@
             document.getElementById('item-id').value = '';
             document.getElementById('modal-title').innerText = '새 버킷리스트 항목';
             document.getElementById('item-form').reset();
+            renderCategorySelectOptions();
             document.getElementById('item-modal').classList.remove('hidden');
         }
 
@@ -899,8 +1037,9 @@
         function editItem(id) {
             const item = bucketItems.find(i => String(i.id) === String(id));
             if (item) {
+                renderCategorySelectOptions();
                 document.getElementById('item-id').value = item.id;
-                document.getElementById('item-category').value = item.category || 'AI_LEARNING';
+                document.getElementById('item-category').value = item.category || (categories[0] ? categories[0].id : 'HOUSING');
                 document.getElementById('item-title').value = item.title || '';
                 document.getElementById('item-desc').value = item.desc || '';
                 document.getElementById('modal-title').innerText = '버킷리스트 수정';
